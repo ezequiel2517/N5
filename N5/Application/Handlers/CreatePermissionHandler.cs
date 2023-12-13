@@ -3,17 +3,19 @@ using N5.Application.Commands;
 using N5.Application.DTOs;
 using N5.Domain;
 using N5.Infrastructure;
-using N5.Infrastructure.UnitOfWork;
+using N5.Interfaces;
 
 namespace N5.Application.Handlers
 {
     public class CreatePermissionHandler : IRequestHandler<CreatePermissionCommand, PermissionDto?>
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IElasticSearchService _elasticsearchService;
 
-        public CreatePermissionHandler(IUnitOfWork unitOfWork)
+        public CreatePermissionHandler(IUnitOfWork unitOfWork, IElasticSearchService elasticsearchService)
         {
             _unitOfWork = unitOfWork;
+            _elasticsearchService = elasticsearchService;
         }
         public async Task<PermissionDto?> Handle(CreatePermissionCommand request, CancellationToken cancellationToken)
         {
@@ -27,6 +29,7 @@ namespace N5.Application.Handlers
 
             await _unitOfWork.PermissionRepository.Create(permission);
             await _unitOfWork.SaveChanges();
+            await _elasticsearchService.InsertDocument("permissions", permission);
 
             return new PermissionDto
             {

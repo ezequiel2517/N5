@@ -1,7 +1,11 @@
-﻿namespace N5.Domain
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace N5.Domain
 {
     public class Permission
     {
+        [Key]
         public int Id { get; set; }
         public string EmployeeForename { get; set; }
         public string EmployeeSurname { get; set; }

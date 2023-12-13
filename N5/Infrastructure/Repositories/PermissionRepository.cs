@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using N5.Domain;
+using N5.Interfaces;
 
 namespace N5.Infrastructure.Repositories
 {

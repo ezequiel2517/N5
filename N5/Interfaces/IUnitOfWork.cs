@@ -1,6 +1,4 @@
-﻿using N5.Infrastructure.Repositories;
-
-namespace N5.Infrastructure.UnitOfWork
+﻿namespace N5.Interfaces
 {
     public interface IUnitOfWork
     {

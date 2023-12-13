@@ -1,4 +1,5 @@
 ﻿using N5.Infrastructure.Repositories;
+using N5.Interfaces;
 
 namespace N5.Infrastructure.UnitOfWork
 {

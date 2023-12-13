@@ -2,7 +2,7 @@
 using N5.Application.Commands;
 using N5.Application.DTOs;
 using N5.Infrastructure;
-using N5.Infrastructure.UnitOfWork;
+using N5.Interfaces;
 
 namespace N5.Application.Handlers
 {
