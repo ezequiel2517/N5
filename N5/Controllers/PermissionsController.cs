@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using N5.Application.Commands;
 using N5.Application.DTOs;
 using N5.Application.Queries;
+using System.Collections;
 
 namespace N5.Controllers
 {
@@ -20,39 +21,65 @@ namespace N5.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<PermissionDto>> GetAll()
+        public async Task<ActionResult<IEnumerable<PermissionDto>>> GetAll()
         {
-            _logger.LogInformation("Ejecutando GetAllPermissionsQuery...");
-            var permissions = await _mediator.Send(new GetAllPermissionsQuery());
-            _logger.LogInformation("Se ejecutó con éxito GetAllPermissionsQuery.");
-            return permissions;
+            try
+            {
+                _logger.LogInformation("Ejecutando GetAllPermissionsQuery...");
+                var permissions = await _mediator.Send(new GetAllPermissionsQuery());
+                _logger.LogInformation("Se ejecutó con éxito GetAllPermissionsQuery.");
+                return Ok(permissions);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error en GetAllPermissionsQuery: {ex.Message}");
+                return NotFound(new { ex.Message });
+            }
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, UpdatePermissionCommand command)
         {
             _logger.LogInformation("Ejecutando UpdatePermissionCommand...");
+
             if (id != command.Id)
             {
-                return BadRequest();
+                return BadRequest(new {Message = "El id de ruta no coincide con el del body."});
             }
 
-            var permission = await _mediator.Send(command);
-            if (permission==null)
+            try
             {
-                return NotFound();
+                var permission = await _mediator.Send(command);
+                if (permission == null)
+                {
+                    return NotFound(new { Message = "El id de permission no existe." });
+                }
             }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error en UpdatePermissionCommand: {ex.Message}");
+                return NotFound(new { ex.Message });
+            }
+
             _logger.LogInformation("Se ejecutó con éxito UpdatePermissionCommand.");
-            return NoContent();
+            return Ok(new {Message = $"Permission de id ({id}) actualizado con éxito."});
         }
 
         [HttpPost]
         public async Task<ActionResult<PermissionDto>> Create(CreatePermissionCommand command)
         {
-            _logger.LogInformation("Ejecutando CreatePermissionCommand...");
-            var permission = await _mediator.Send(command);
-            _logger.LogInformation("Se ejecutó con éxito CreatePermissionCommand...");
-            return permission;
+            try
+            {
+                _logger.LogInformation("Ejecutando CreatePermissionCommand...");
+                var permission = await _mediator.Send(command);
+                _logger.LogInformation("Se ejecutó con éxito CreatePermissionCommand...");
+                return Ok(permission);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError($"Error en CreatePermissionCommand: {ex.Message}");
+                return NotFound(new { ex.Message });
+            }
         }
     }
 }
