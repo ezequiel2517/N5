@@ -38,12 +38,23 @@ Solicitudes a la ruta:
 localhost:8080/api/Permissions
 ````
 
-JSON de ejemplo:
+POST:
 ```json
 {
     "EmployeeForename": "Virginia",
     "EmployeeSurname": "Estevez",
     "PermissionType": 1,
+    "PermissionDate": "2023-12-14T12:00:00"
+}
+```
+
+PUT:
+```json
+{
+    "Id": 1,
+    "EmployeeForename": "Analia",
+    "EmployeeSurname": "Dutra",
+    "PermissionType": 2,
     "PermissionDate": "2023-12-14T12:00:00"
 }
 ```
