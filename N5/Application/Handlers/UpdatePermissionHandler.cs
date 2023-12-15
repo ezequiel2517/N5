@@ -27,6 +27,12 @@ namespace N5.Application.Handlers
             permission.PermissionType = request.PermissionType;
             permission.PermissionDate = request.PermissionDate;
 
+            var idPermissionType = await _unitOfWork.PermissionRepository.GetPermissionTypeById(permission.PermissionType);
+            if (idPermissionType == null)
+            {
+                throw new Exception($"PermissionType ({permission.PermissionType}) no existe.");
+            }
+
             await _unitOfWork.PermissionRepository.UpdatePermission(permission);
             await _unitOfWork.SaveChanges();
             await _elasticsearchService.InsertDocument("permissions", permission);
