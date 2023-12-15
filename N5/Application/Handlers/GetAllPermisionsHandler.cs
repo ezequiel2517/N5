@@ -16,7 +16,7 @@ namespace N5.Application.Handlers
 
         public async Task<IEnumerable<PermissionDto>> Handle(GetAllPermissionsQuery request, CancellationToken cancellationToken)
         {
-            var permissions = await _unitOfWork.PermissionRepository.GetAll();
+            var permissions = await _unitOfWork.PermissionRepository.GetAllPermissions();
             return permissions.Select(permission => new PermissionDto
             {
                 Id = permission.Id,

@@ -19,7 +19,7 @@ namespace N5.Application.Handlers
         }
 
         public async Task<PermissionDto?> Handle(UpdatePermissionCommand request, CancellationToken cancellationToken) {
-            var permission = await _unitOfWork.PermissionRepository.GetById(request.Id);
+            var permission = await _unitOfWork.PermissionRepository.GetPermissionById(request.Id);
             if (permission == null) 
                 return null;
             permission.Id = request.Id;
@@ -27,7 +27,7 @@ namespace N5.Application.Handlers
             permission.PermissionType = request.PermissionType;
             permission.PermissionDate = request.PermissionDate;
 
-            await _unitOfWork.PermissionRepository.Update(permission);
+            await _unitOfWork.PermissionRepository.UpdatePermission(permission);
             await _unitOfWork.SaveChanges();
             await _elasticsearchService.InsertDocument("permissions", permission);
             

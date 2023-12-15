@@ -20,15 +20,15 @@ namespace N5.Services
 
         public async Task Produce(string topic, string message)
         {
-            var mensaje = new
+            var messageId = new
             {
                 Id = Guid.NewGuid().ToString(),
-                Mensaje = message
+                Method = message
             };
 
-            var mensajeJson = JsonConvert.SerializeObject(mensaje);
+            var messageJson = JsonConvert.SerializeObject(messageId);
 
-            await _producer.ProduceAsync(topic, new Message<string, string> { Value = mensajeJson });
+            await _producer.ProduceAsync(topic, new Message<string, string> { Value = messageJson });
         }
     }
 }

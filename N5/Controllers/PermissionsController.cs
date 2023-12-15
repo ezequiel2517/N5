@@ -31,8 +31,8 @@ namespace N5.Controllers
             try
             {
                 _logger.LogInformation("Ejecutando GetAllPermissionsQuery...");
-                var permissions = await _mediator.Send(new GetAllPermissionsQuery());
                 await _kafkaProducerService.Produce("methods", "GET");
+                var permissions = await _mediator.Send(new GetAllPermissionsQuery());             
                 _logger.LogInformation("Se ejecutó con éxito GetAllPermissionsQuery.");
                 return Ok(permissions);
             }
@@ -47,7 +47,7 @@ namespace N5.Controllers
         public async Task<IActionResult> Update(int id, UpdatePermissionCommand command)
         {
             _logger.LogInformation("Ejecutando UpdatePermissionCommand...");
-
+            await _kafkaProducerService.Produce("methods", "PUT");
             if (id != command.Id)
             {
                 return BadRequest(new {Message = "El id de ruta no coincide con el del body."});
@@ -60,7 +60,7 @@ namespace N5.Controllers
                 {
                     return NotFound(new { Message = "El id de permission no existe." });
                 }
-                await _kafkaProducerService.Produce("methods", "PUT");
+                
             }
             catch (Exception ex)
             {
@@ -78,8 +78,8 @@ namespace N5.Controllers
             try
             {
                 _logger.LogInformation("Ejecutando CreatePermissionCommand...");
-                var permission = await _mediator.Send(command);
                 await _kafkaProducerService.Produce("methods", "POST");
+                var permission = await _mediator.Send(command);
                 _logger.LogInformation("Se ejecutó con éxito CreatePermissionCommand...");
                 return Ok(permission);
             }
