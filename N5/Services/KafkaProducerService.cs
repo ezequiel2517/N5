@@ -1,5 +1,6 @@
 ﻿using Confluent.Kafka;
 using N5.Interfaces;
+using Newtonsoft.Json;
 
 namespace N5.Services
 {
@@ -19,8 +20,15 @@ namespace N5.Services
 
         public async Task Produce(string topic, string message)
         {
-            var result = await _producer.ProduceAsync(topic, new Message<string, string> { Value = message });
-            Console.WriteLine($"Produced message to: {result.TopicPartitionOffset}");
+            var mensaje = new
+            {
+                Id = Guid.NewGuid().ToString(),
+                Mensaje = message
+            };
+
+            var mensajeJson = JsonConvert.SerializeObject(mensaje);
+
+            await _producer.ProduceAsync(topic, new Message<string, string> { Value = mensajeJson });
         }
     }
 }

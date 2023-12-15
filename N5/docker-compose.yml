@@ -24,20 +24,8 @@
     ports:
       - "9200:9200"
       - "9300:9300"
-    depends_on:
-     - sql-server 
-  web-app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "8080:7203"
-    depends_on:
-      - elasticsearch
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:7203
   zookeeper:
+    container_name: zookeeper
     image: confluentinc/cp-zookeeper:latest
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
@@ -45,6 +33,7 @@
     ports:
       - 22181:2181
   kafka:
+    container_name: kafka
     image: confluentinc/cp-kafka:latest
     depends_on:
       - zookeeper
@@ -56,4 +45,18 @@
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1  
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+  api:
+    container_name: api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:7203"
+    depends_on:
+      - elasticsearch
+      - sql-server
+      - zookeeper
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:7203
