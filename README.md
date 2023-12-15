@@ -8,7 +8,7 @@ docker-compose up
 ```
 
 ## Ejecutar - Local
-Para ejecutar la API en ambiente Local comentarizar
+Para debug la API en ambiente local comentarizar (no es necesario)
 ```yaml
 #api:
 #  container_name: api
@@ -72,6 +72,7 @@ docker exec -it kafka kafka-console-consumer --topic methods --bootstrap-server 
 ```
 
 ## Observaciones
+- Se agregan tres test básicos para cada método.
 - Se utilizaron patrones: Repository, Unit of Work, Mediator, CQRS.
 - Se agregó log solamente en el api controller (se podría haber agregado mucho más).
 - El servicio **db-init** solo existe para inicializar la DB de SQL Server.
