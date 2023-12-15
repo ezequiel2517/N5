@@ -24,6 +24,7 @@ namespace N5.Application.Handlers
                 return null;
             permission.Id = request.Id;
             permission.EmployeeForename = request.EmployeeForename;
+            permission.EmployeeSurname = request.EmployeeSurname;
             permission.PermissionType = request.PermissionType;
             permission.PermissionDate = request.PermissionDate;
 
