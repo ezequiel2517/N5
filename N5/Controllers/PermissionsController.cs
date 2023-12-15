@@ -1,9 +1,11 @@
-﻿using MediatR;
+﻿using Confluent.Kafka;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using N5.Application.Commands;
 using N5.Application.DTOs;
 using N5.Application.Queries;
+using N5.Interfaces;
 using System.Collections;
 
 namespace N5.Controllers
@@ -14,10 +16,13 @@ namespace N5.Controllers
     {
         private readonly IMediator _mediator;
         private readonly ILogger<PermissionsController> _logger;
-        public PermissionsController(IMediator mediator, ILogger<PermissionsController> logger)
+        private readonly IKafkaProducerService _kafkaProducerService;
+        public PermissionsController(IMediator mediator, ILogger<PermissionsController> logger, 
+            IKafkaProducerService kafkaProducerService)
         {
             _mediator = mediator;
             _logger = logger;
+            _kafkaProducerService = kafkaProducerService;
         }
 
         [HttpGet]
@@ -27,6 +32,7 @@ namespace N5.Controllers
             {
                 _logger.LogInformation("Ejecutando GetAllPermissionsQuery...");
                 var permissions = await _mediator.Send(new GetAllPermissionsQuery());
+                await _kafkaProducerService.Produce("methods", "GET");
                 _logger.LogInformation("Se ejecutó con éxito GetAllPermissionsQuery.");
                 return Ok(permissions);
             }
@@ -54,6 +60,7 @@ namespace N5.Controllers
                 {
                     return NotFound(new { Message = "El id de permission no existe." });
                 }
+                await _kafkaProducerService.Produce("methods", "PUT");
             }
             catch (Exception ex)
             {
@@ -72,6 +79,7 @@ namespace N5.Controllers
             {
                 _logger.LogInformation("Ejecutando CreatePermissionCommand...");
                 var permission = await _mediator.Send(command);
+                await _kafkaProducerService.Produce("methods", "POST");
                 _logger.LogInformation("Se ejecutó con éxito CreatePermissionCommand...");
                 return Ok(permission);
             }
